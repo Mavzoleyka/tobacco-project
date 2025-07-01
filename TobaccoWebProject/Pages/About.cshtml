@@ -1,0 +1,31 @@
+﻿@page
+@model TobaccoWebProject.Pages.AboutModel
+@{
+	ViewData["Title"] = "О магазине";
+	Layout = "_Layout";
+}
+
+<section class="relative min-h-[60vh] flex items-center justify-center">
+    <!-- Фоновое изображение -->
+    <img src="~/images/about-bg.png"
+         alt="Два рабочих. Советский авангард"
+         class="absolute inset-0 w-full h-full object-cover object-center opacity-80 z-0 select-none pointer-events-none" />
+
+    <!-- Затемнение для контраста -->
+    <div class="absolute inset-0 bg-black bg-opacity-30 z-10"></div>
+
+    <!-- Контент поверх -->
+    <div class="relative z-20 max-w-3xl mx-auto px-8 py-16 text-center text-white">
+        <h1 class="text-4xl font-bold mb-6 drop-shadow-lg">О магазине Tobacco Shop</h1>
+        <p class="mb-4 text-lg drop-shadow">
+            <b>Tobacco Shop</b> — это магазин с современным взглядом на традиции.<br />
+            Мы предлагаем только сертифицированную продукцию от лучших производителей, поддерживаем высокий уровень сервиса и любим эксперименты с дизайном.
+        </p>
+        <p class="mb-4 drop-shadow">
+            <span class="text-yellow-300 font-semibold">Особенность нашего магазина</span> — уникальная атмосфера и стиль, вдохновлённый советским авангардом. Мы ценим не только качество, но и эстетику каждой детали!
+        </p>
+        <p class="drop-shadow">
+            <span class="font-semibold">Миссия:</span> дарить покупателям удобство выбора, уверенность в подлинности продукции и удовольствие от сервиса.
+        </p>
+    </div>
+</section>

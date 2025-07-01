@@ -1,0 +1,30 @@
+﻿@page "/DeleteManufac/{id:int}"
+@model TobaccoWebProject.Pages.Admin.Manufacturers.DeleteModel
+@{
+	ViewData["Title"] = "Удалить производителя";
+    Layout = "_AdminLayout";
+}
+
+<h2 class="text-2xl font-bold mb-4 text-red-600">Удалить производителя</h2>
+
+@if (Model.Manufacturer is not null)
+{
+    <div class="border rounded p-4 mb-6 bg-red-50">
+        <p>Вы уверены, что хотите удалить производителя <strong>@Model.Manufacturer.Name</strong>?</p>
+        @if (!string.IsNullOrWhiteSpace(Model.Manufacturer.Country))
+        {
+            <p class="text-sm text-gray-500">Страна: @Model.Manufacturer.Country</p>
+        }
+    </div>
+
+    <form method="post">
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+            Удалить
+        </button>
+        <a asp-page="./Index" class="ml-4 text-gray-600 hover:underline">Отмена</a>
+    </form>
+}
+else
+{
+    <p class="text-gray-500">Производитель не найден.</p>
+}

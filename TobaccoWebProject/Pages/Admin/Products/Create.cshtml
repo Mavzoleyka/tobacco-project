@@ -1,0 +1,66 @@
+﻿@page
+@model TobaccoWebProject.Pages.Admin.Products.CreateModel
+@{
+	Layout = "_AdminLayout";
+	ViewData["Title"] = "Добавить товар";
+}
+
+
+<div class="container mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold mb-6">Добавление товара</h1>
+
+    <form method="post" class="space-y-6">
+        <div>
+            <label asp-for="Input.Name" class="block font-medium">Название</label>
+            <input asp-for="Input.Name" class="w-full border border-gray-300 rounded p-2" />
+            <span asp-validation-for="Input.Name" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div>
+            <label asp-for="Input.Description" class="block font-medium">Описание</label>
+            <textarea asp-for="Input.Description" rows="4" class="w-full border border-gray-300 rounded p-2"></textarea>
+            <span asp-validation-for="Input.Description" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div class="flex space-x-4">
+            <div class="w-1/2">
+                <label asp-for="Input.Stock" class="block font-medium">В наличии (шт)</label>
+                <input asp-for="Input.Stock" type="number" class="w-full border border-gray-300 rounded p-2" />
+                <span asp-validation-for="Input.Stock" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div class="w-1/2">
+                <label asp-for="Input.Brand" class="block font-medium">Бренд</label>
+                <input asp-for="Input.Brand" class="w-full border border-gray-300 rounded p-2" />
+                <span asp-validation-for="Input.Brand" class="text-red-500 text-sm"></span>
+            </div>
+        </div>
+
+        <div class="flex space-x-4">
+            <div class="w-1/2">
+                <label asp-for="Input.CategoryId" class="block font-medium">Категория</label>
+                <select asp-for="Input.CategoryId" asp-items="Model.Categories" class="w-full border border-gray-300 rounded p-2"></select>
+                <span asp-validation-for="Input.CategoryId" class="text-red-500 text-sm"></span>
+            </div>
+
+            <div class="w-1/2">
+                <label asp-for="Input.ManufacturerId" class="block font-medium">Производитель</label>
+                <select asp-for="Input.ManufacturerId" asp-items="Model.Manufacturers" class="w-full border border-gray-300 rounded p-2"></select>
+                <span asp-validation-for="Input.ManufacturerId" class="text-red-500 text-sm"></span>
+            </div>
+        </div>
+
+        <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 font-semibold">
+            Добавить товар
+        </button>
+
+        <div class="mt-4">
+            <a asp-page="./Index" class="text-blue-600 hover:underline">← Назад к списку</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

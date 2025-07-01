@@ -1,0 +1,42 @@
+﻿@page
+@model TobaccoWebProject.Pages.Account.LoginModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Вход";
+}
+
+<div class="max-w-md mx-auto mt-16 p-8 bg-gray-900 rounded-lg shadow-lg">
+    <h1 class="text-4xl font-extrabold text-center text-yellow-400 mb-8 uppercase tracking-wide">Вход</h1>
+
+    <form method="post" class="space-y-6">
+        <div asp-validation-summary="All" class="text-red-500 text-sm"></div>
+
+        <div>
+            <label asp-for="Input.Login" class="block mb-2 font-semibold text-yellow-300">Логин</label>
+            <input asp-for="Input.Login" type="text"
+                   class="w-full rounded-md border border-yellow-400 bg-gray-800 text-yellow-300 px-4 py-3 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500 focus:outline-none transition" />
+            <span asp-validation-for="Input.Login" class="text-red-500 text-xs mt-1 block"></span>
+        </div>
+
+        <div>
+            <label asp-for="Input.Password" class="block mb-2 font-semibold text-yellow-300">Пароль</label>
+            <input asp-for="Input.Password" type="password"
+                   class="w-full rounded-md border border-yellow-400 bg-gray-800 text-yellow-300 px-4 py-3 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500 focus:outline-none transition" />
+            <span asp-validation-for="Input.Password" class="text-red-500 text-xs mt-1 block"></span>
+        </div>
+
+        <button type="submit"
+                class="w-full bg-yellow-400 text-gray-900 font-bold py-3 rounded-md hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 transition uppercase tracking-wider">
+            Войти
+        </button>
+    </form>
+
+    <p class="mt-6 text-center text-yellow-300 text-sm">
+        Нет аккаунта?
+        <a asp-page="/Account/Registration" class="underline font-semibold">Зарегистрироваться</a>
+    </p>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

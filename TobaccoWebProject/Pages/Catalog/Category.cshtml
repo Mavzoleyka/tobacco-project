@@ -1,0 +1,37 @@
+﻿@page "/Category/{id:int}"
+@model TobaccoWebProject.Pages.Catalog.CategoryModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Товары в категории";
+}
+
+
+
+<div class="container mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold mb-8">Товары в категории "@Model.CategoryName"</h1>
+
+    @if (Model.Products.Any())
+    {
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            @foreach (var product in Model.Products)
+            {
+                <div class="bg-white shadow-md rounded-lg overflow-hidden p-4 flex flex-col justify-between">
+                    <img src="@Url.Content("~/" + product.MainImage)" alt="@product.Name"
+                         class="h-48 w-full object-cover mb-4 rounded" />
+
+                    <h2 class="text-xl font-semibold">@product.Name</h2>
+                    <p class="text-sm text-gray-600 mb-2">@product.Brand</p>
+
+                    <a asp-page="/Catalog/ProductCard" asp-route-id="@product.Id"
+                       class="text-blue-600 text-sm hover:underline mt-auto">
+                        Подробнее →
+                    </a>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-gray-600">В этой категории пока нет товаров.</p>
+    }
+</div>

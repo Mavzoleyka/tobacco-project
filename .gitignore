@@ -1,0 +1,23 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code settings
+.vscode/
+
+# Visual Studio files
+.vs/
+
+# Others
+*.log
+.env
+.DS_Store
+
+# Node.js (если что-то есть)
+node_modules/

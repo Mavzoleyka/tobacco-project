@@ -1,0 +1,96 @@
+﻿@page
+@model TobaccoWebProject.Pages.IndexModel
+@{
+	Layout = "_Layout";
+	ViewData["Title"] = "Главная";
+}
+
+<<<<<<< HEAD
+
+=======
+<!-- Hero section -->
+<!-- Hero section с авангардным фоном -->
+>>>>>>> 4e86bfd6c1622bbd7a295b3f4737f3422283a18f
+<section class="bg-cover bg-center py-28" style="background-image: url('/images/hero-avangard.png');">
+    <div class="bg-black bg-opacity-60 max-w-2xl mx-auto text-center p-10 rounded-lg">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+            Табачные изделия для ценителей
+        </h1>
+        <p class="text-lg text-gray-200 mb-6">
+            Качество, стиль и уверенность. Откройте для себя наш каталог.
+        </p>
+        <a asp-page="/Catalog/Index"
+           class="relative inline-block px-8 py-3 font-bold uppercase tracking-wider
+          bg-red-700 text-white
+          overflow-hidden border-2 border-black
+          shadow-md
+          transition-all duration-300
+          hover:-skew-x-6 hover:scale-105
+          ">
+            <span class="relative z-10">Перейти в каталог</span>
+        </a>
+    </div>
+</section>
+
+<<<<<<< HEAD
+
+=======
+<!-- Почему мы (авангард стиль) -->
+>>>>>>> 4e86bfd6c1622bbd7a295b3f4737f3422283a18f
+<section class="py-16 bg-[#FFF9DB]">
+    <div class="container mx-auto px-6">
+        <h2 class="text-4xl font-extrabold uppercase tracking-widest text-[#D32F2F] text-center mb-16 border-b-8 border-black inline-block pb-3">
+            Почему выбирают нас?
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+            <div class="p-8 bg-[#FFEB3B] border-8 border-black rounded-none shadow-lg hover:scale-105 transition-transform cursor-pointer">
+                <div class="text-6xl mb-6">✔️</div>
+                <h3 class="text-2xl font-bold uppercase mb-4 tracking-wide">Качество</h3>
+                <p class="font-semibold text-black">Продаём только сертифицированную продукцию.</p>
+            </div>
+            <div class="p-8 bg-[#D32F2F] border-8 border-black rounded-none shadow-lg hover:scale-105 transition-transform cursor-pointer text-white">
+                <div class="text-6xl mb-6">🚚</div>
+                <h3 class="text-2xl font-bold uppercase mb-4 tracking-wide">Удобство</h3>
+                <p class="font-semibold">Быстрая обработка заказов и отличная поддержка.</p>
+            </div>
+            <div class="p-8 bg-black border-8 border-yellow-400 rounded-none shadow-lg hover:scale-105 transition-transform cursor-pointer text-yellow-400">
+                <div class="text-6xl mb-6">🎯</div>
+                <h3 class="text-2xl font-bold uppercase mb-4 tracking-wide">Надёжность</h3>
+                <p class="font-semibold">Работаем с проверенными производителями и брендами.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<<<<<<< HEAD
+
+=======
+<!-- Категории (более строгий авангард) -->
+>>>>>>> 4e86bfd6c1622bbd7a295b3f4737f3422283a18f
+@if (Model.Categories.Any())
+{
+    <section class="py-16 bg-[#FFF3C4]">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-extrabold uppercase tracking-widest text-black text-center mb-12 border-b-4 border-black inline-block pb-3">
+                Популярные категории
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                @foreach (var category in Model.Categories.Take(3))
+                {
+                    <a asp-page="/Catalog/Category"
+                       asp-route-id="@category.Id"
+                       class="bg-white border-4 border-black p-6 rounded-none shadow-lg hover:shadow-2xl hover:scale-105 transition-transform cursor-pointer text-center uppercase font-bold tracking-wide text-[#D32F2F]">
+                        <h3 class="text-2xl mb-2">@category.Name</h3>
+                        <p class="text-sm text-gray-700">Смотреть товары →</p>
+                    </a>
+                }
+            </div>
+            <div class="text-center mt-10">
+                <a asp-page="/Catalog/Index"
+                   class="text-[#D32F2F] font-bold uppercase tracking-wide hover:underline">
+                    Смотреть все категории →
+                </a>
+            </div>
+        </div>
+    </section>
+}

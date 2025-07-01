@@ -1,0 +1,47 @@
+﻿@page
+@model TobaccoWebProject.Pages.ContactModel
+@{
+	ViewData["Title"] = "Контакты";
+	Layout = "_Layout";
+}
+
+<section class="relative min-h-[60vh] flex items-center justify-center">
+    <!-- Фоновое изображение -->
+    <img src="~/images/contacts-bg2.png"
+         alt="Контакты. Телефон, карта, лупа — советский авангард"
+         class="absolute inset-0 w-full h-full object-cover object-center opacity-80 z-0 select-none pointer-events-none" />
+
+    <!-- Затемнение для контраста -->
+    <div class="absolute inset-0 bg-black bg-opacity-30 z-10"></div>
+
+    <!-- Контент поверх -->
+    <div class="relative z-20 max-w-3xl mx-auto px-8 py-16 text-center text-white">
+        <h1 class="text-4xl font-bold mb-6 drop-shadow-lg">Контакты</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+            <div>
+                <div class="mb-6">
+                    <div class="text-yellow-200 mb-2 font-semibold">Телефон:</div>
+                    <a href="tel:+79001112233" class="text-blue-100 hover:underline text-lg">+7 (900) 111-22-33</a>
+                </div>
+                <div class="mb-6">
+                    <div class="text-yellow-200 mb-2 font-semibold">Email:</div>
+                    <a href="mailto:info@tobaccoshop.ru" class="text-blue-100 hover:underline text-lg">info@tobaccoshop.ru</a>
+                </div>
+                <div class="mb-6">
+                    <div class="text-yellow-200 mb-2 font-semibold">Telegram:</div>
+                    <a href="https://t.me/yourshop" target="_blank" class="text-blue-100 hover:underline text-lg">yourshop</a>
+                </div>
+                <div>
+                    <div class="text-yellow-200 mb-2 font-semibold">Адрес:</div>
+                    <div class="text-lg">г. Новосибирск, ул. Ленина, д. 10</div>
+                </div>
+            </div>
+            <div>
+                <div class="w-full h-64 rounded-lg overflow-hidden shadow">
+                    <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A0e7746c0b2345e405bce1e58c25466c7e66a6b5e55d242747c4d8c3fd3451228&amp;source=constructor"
+                            width="100%" height="100%" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

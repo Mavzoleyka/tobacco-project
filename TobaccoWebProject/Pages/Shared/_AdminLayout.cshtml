@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Панель управления</title>
+    <link href="~/tailwindcss/tailwind.css" rel="stylesheet" />
+</head>
+<body class="flex min-h-screen bg-gray-100 text-gray-900">
+    <aside class="w-64 bg-white shadow-md p-6 space-y-4">
+        <!-- Кнопка возврата -->
+        <a asp-page="/Index"
+           class="inline-block mb-4 text-sm text-blue-600 hover:underline">
+            ← Назад на сайт
+        </a>
+
+        <h2 class="text-2xl font-bold mb-6">Админка</h2>
+
+        <nav class="space-y-2">
+            <a asp-page="/Admin/Index" class="block hover:text-blue-600">🏠 Главная</a>
+            <a asp-page="/Admin/Manufacturers/Index" class="block hover:text-blue-600">🏭 Производители</a>
+            <a asp-page="/Admin/Categories/Index" class="block hover:text-blue-600">🗂 Категории</a>
+            <a asp-page="/Admin/Products/Index" class="block hover:text-blue-600">📦 Товары</a>
+        </nav>
+    </aside>
+    <main class="flex-1 p-10">
+        @RenderBody()
+    </main>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

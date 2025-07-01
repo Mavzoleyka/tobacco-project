@@ -1,0 +1,77 @@
+﻿@page "/UploadPhotoProduct/{ProductId:int}"
+@model TobaccoWebProject.Pages.Photos.UploadModel
+@{
+	Layout = "_AdminLayout";
+	ViewData["Title"] = "Загрузка фото";
+}
+
+
+<div class="container mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold mb-6">Загрузка фотографий для "@Model.ProductName"</h1>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+        <input type="hidden" asp-for="ProductId" />
+
+        <div>
+            <label class="block font-medium">Выберите изображения (можно несколько)</label>
+            <input type="file" name="Photos" multiple
+                   class="mt-1 block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+        </div>
+
+        <input type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 font-semibold"
+               asp-route-ProductId="@Model.ProductId" value="Загрузить" />
+            
+        
+
+        <div class="mt-4">
+            <a asp-page="/Admin/Products/Edit" asp-route-id="@Model.ProductId" class="text-blue-600 hover:underline">← Назад к товару</a>
+        </div>
+    </form>
+
+    @if (Model.ExistingPhotos.Any())
+    {
+        <div class="mt-10">
+            <h2 class="text-xl font-semibold mb-4">Текущие фото</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                @foreach (var photo in Model.ExistingPhotos)
+                {
+                    <div class="border rounded p-2 bg-white shadow text-center">
+                        <img src="@Url.Content("~/" + photo.ImageURL)" alt="@photo.Caption" class="mx-auto max-h-40 object-contain" />
+
+                        @if (!string.IsNullOrEmpty(photo.Caption))
+                        {
+                            <p class="text-sm text-gray-600 mt-1">@photo.Caption</p>
+                        }
+
+                        @if (photo.IsMain)
+                        {
+                            <span class="text-green-600 text-xs font-bold block mt-1">[Главное]</span>
+                        }
+
+                        <div class="mt-2 space-x-2">
+                            <form method="post" asp-page-handler="MakeMainPhoto" asp-route-id="@photo.Id" class="inline">
+                                <button type="submit"
+                                        class="text-xs text-blue-600 hover:underline">
+                                    Сделать главным
+                                </button>
+                            </form>
+
+                            <form method="post"
+                                  asp-page-handler="Delete"
+                                  asp-route-id="@photo.Id"
+                                  onsubmit="return confirm('Удалить фото?');"
+                                  class="inline">
+                                <button type="submit"
+                                        class="text-xs text-red-600 hover:underline">
+                                    Удалить
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+

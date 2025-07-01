@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title</title>
+    <link href="~/tailwindcss/tailwind.css" rel="stylesheet" />
+</head>
+<body class="flex flex-col min-h-screen bg-[#FFF9DB] text-gray-800"
+      style="background-image: url('/images/paper-fibers.png'); background-repeat: repeat; background-size: 400px 400px;">
+
+    <!-- Хэдер -->
+    <header class="bg-[#FFF3C4] shadow-md">
+        <div class="container mx-auto flex justify-between items-center py-4 px-6">
+            <a asp-page="/Index" class="text-2xl font-bold text-gray-900">Tobacco Shop</a>
+
+            <nav class="flex space-x-6 text-gray-800">
+                <a asp-page="/Catalog/Index" class="hover:text-gray-900 transition">Каталог</a>
+                <a asp-page="/About" class="hover:text-gray-900 transition">О магазине</a>
+                <a asp-page="/Contact" class="hover:text-gray-900 transition">Контакты</a>
+            </nav>
+
+            <div class="flex items-center space-x-3 text-gray-800">
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <span class="text-sm">👤 @User.Identity.Name</span>
+
+                    @if (User.HasClaim("role", "Admin"))
+                    {
+                        <a asp-page="/Admin/Index"
+                           class="inline-block px-4 py-2 text-sm text-purple-700 border border-purple-700 rounded hover:bg-purple-100 transition">
+                            Панель администратора
+                        </a>
+                    }
+
+                    <form asp-page="/Account/Logout" method="post" class="inline">
+                        <button type="submit"
+                                class="bg-[#FFEB3B] text-black border-4 border-black px-6 py-2 uppercase tracking-widest
+                                font-extrabold rounded-none shadow-inner hover:shadow-lg hover:scale-105
+                                transition-transform duration-200">
+                            Выйти
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-page="/Account/Login"
+                       class="bg-transparent text-[#D32F2F] border-4 border-[#D32F2F] px-6 py-2 uppercase tracking-widest font-bold rounded-none hover:bg-[#D32F2F] hover:text-white transition-colors duration-300">
+                        Войти
+                    </a>
+                }
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="flex-grow container mx-auto px-4 py-10">
+        @RenderBody()
+    </main>
+
+    <!-- Футер -->
+    <footer class="bg-[#FFF3C4] text-center py-6 mt-8 text-sm text-gray-700 shadow-inner">
+        © 2025 Tobacco Shop. Все права защищены.
+    </footer>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

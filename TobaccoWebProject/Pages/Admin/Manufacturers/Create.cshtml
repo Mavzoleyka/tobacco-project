@@ -1,0 +1,28 @@
+﻿@page "/CreateManufac"
+@model TobaccoWebProject.Pages.Admin.Manufacturers.CreateModel
+@{
+    ViewData["Title"] = "Добавить производителя";
+    Layout = "_AdminLayout";
+}
+
+<h2 class="text-2xl font-bold mb-6">Добавить производителя</h2>
+
+<form method="post" class="space-y-4 max-w-md">
+    <div>
+        <label asp-for="Manufacturer.Name" class="block font-medium">Название</label>
+        <input asp-for="Manufacturer.Name" class="w-full border rounded px-3 py-2" />
+        <span asp-validation-for="Manufacturer.Name" class="text-red-600 text-sm"></span>
+    </div>
+
+    <div>
+        <label asp-for="Manufacturer.Country" class="block font-medium">Страна</label>
+        <input asp-for="Manufacturer.Country" class="w-full border rounded px-3 py-2" />
+        <span asp-validation-for="Manufacturer.Country" class="text-red-600 text-sm"></span>
+    </div>
+
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
+        Сохранить
+    </button>
+</form>
+
+

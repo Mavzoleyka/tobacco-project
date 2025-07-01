@@ -1,0 +1,32 @@
+﻿@page "/EditManufac/{id:int}"
+@model TobaccoWebProject.Pages.Admin.Manufacturers.EditModel
+@{
+    ViewData["Title"] = "Редактировать производителя";
+    Layout = "_AdminLayout";
+}
+
+<h2 class="text-2xl font-bold mb-6">Редактировать производителя</h2>
+
+<form method="post" class="space-y-4 max-w-md">
+    <input type="hidden" asp-for="Manufacturer.Id" />
+
+    <div>
+        <label asp-for="Manufacturer.Name" class="block font-medium">Название</label>
+        <input asp-for="Manufacturer.Name" class="w-full border rounded px-3 py-2" />
+        <span asp-validation-for="Manufacturer.Name" class="text-red-600 text-sm"></span>
+    </div>
+
+    <div>
+        <label asp-for="Manufacturer.Country" class="block font-medium">Страна</label>
+        <input asp-for="Manufacturer.Country" class="w-full border rounded px-3 py-2" />
+        <span asp-validation-for="Manufacturer.Country" class="text-red-600 text-sm"></span>
+    </div>
+
+    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
+        Сохранить
+    </button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
