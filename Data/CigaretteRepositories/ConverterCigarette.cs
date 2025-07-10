@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Data.CigaretteRepositories
 {
-    public static class ConverterCigarette
+    public static class ConverterCigarette 
     {
         public static async Task<CigaretteManufacturerDTO?> ParseAsync(this Task<CigarettesManufacturer?> element)
         {

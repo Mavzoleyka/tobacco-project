@@ -36,7 +36,7 @@ namespace Data.CigaretteRepositories
             };
 
             await _connection.CigarettesPhotos.AddAsync(photo);
-            await _connection.SaveChangesAsync(); // ← чтобы не забыть сохранить
+            await _connection.SaveChangesAsync(); 
             return true;
         }
 

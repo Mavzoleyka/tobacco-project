@@ -19,10 +19,6 @@ namespace TobaccoWebProject.Pages.Account
             return RedirectToPage("/Index");
         }
 
-        //public async Task<IActionResult> OnGet()
-        //{
-        //    await HttpContext.SignOutAsync("Cookies");
-        //    return RedirectToPage("/Index");
-        //}
+        
     }
 }

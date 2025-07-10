@@ -16,10 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-<<<<<<< HEAD
     <PackageReference Include="Scrutor.AspNetCore" Version="3.3.0" />
-=======
->>>>>>> 4e86bfd6c1622bbd7a295b3f4737f3422283a18f
   </ItemGroup>
 
   <ItemGroup>

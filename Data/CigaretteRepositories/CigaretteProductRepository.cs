@@ -67,7 +67,7 @@ namespace Data.CigaretteRepositories
         public async Task<List<CigaretteProductDTO>> GetAllAsync()
         {
             var list = await _connection.СigarettesProducts
-                                         .Include(p => p.CigarettesPhotos) // не забудь загрузку фото
+                                         .Include(p => p.CigarettesPhotos) 
                                          .AsNoTracking()
                                          .ToListAsync();
 
@@ -90,7 +90,7 @@ namespace Data.CigaretteRepositories
                         IsMain = obj.IsMain,
                         ProductId = obj.ProductId,
                     }).ToList()
-            }).ToList(); // ← здесь финальный .ToList() тоже важен
+            }).ToList(); 
 
             return products;
         }
