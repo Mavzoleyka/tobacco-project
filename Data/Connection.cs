@@ -21,8 +21,40 @@ namespace Data
         {
             
         }
+
+        //переопределил сохранение в бд для автоматического обновления дат времени создания и добавления
+        public override Task<int> SaveChangesAsync(CancellationToken ct = default)
+        {
+            var now = DateTime.UtcNow;
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                if (entry.Entity is Reservation or ReservationItem)
+                {
+                    if (entry.State == EntityState.Added)
+                    {
+                        entry.CurrentValues["CreatedAt"] = now;
+                        entry.CurrentValues["UpdatedAt"] = now;
+                    }
+                    else if (entry.State == EntityState.Modified)
+                    {
+                        entry.CurrentValues["UpdatedAt"] = now;
+                    }
+                }
+            }
+            return base.SaveChangesAsync(ct);
+        }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //enum для бд
+            modelBuilder.Entity<Reservation>()
+            .Property(x => x.reservationStatus)
+            .HasConversion<string>()      
+            .HasMaxLength(20);
+
+            modelBuilder.Entity<ReservationItem>().HasQueryFilter(row => !row.IsDelete);
+            modelBuilder.Entity<Reservation>().HasQueryFilter(row => !row.IsDelete);
             modelBuilder.Entity< СigarettesProduct>().HasQueryFilter(row=>!row.IsDelete);
             modelBuilder.Entity<CigarettesPhoto>().HasQueryFilter(row => !row.IsDelete);
             modelBuilder.Entity<CigarettesCategorie>().HasQueryFilter(row => !row.IsDelete);
