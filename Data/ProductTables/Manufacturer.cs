@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Data.CigaretteTables
 {
-    public class CigarettesCategorie : IDelete
+    public class Manufacturer : IDelete
     {
         [Key]
         public int Id { get; set; }
@@ -15,6 +15,8 @@ namespace Data.CigaretteTables
         [MinLength(2)]
         [MaxLength(200)]
         public string Name { get; set; } = null!;
-        public bool IsDelete { get; set; }
+        [MaxLength(300)]
+        public string? Country { get; set; }
+        public bool IsDelete { get; set; } = false;
     }
 }

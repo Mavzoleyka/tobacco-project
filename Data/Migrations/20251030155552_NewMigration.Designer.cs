@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(Connection))]
-    [Migration("20251029175826_v6")]
-    partial class v6
+    [Migration("20251030155552_NewMigration")]
+    partial class NewMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,28 +40,7 @@ namespace Data.Migrations
                     b.ToTable("ClientRole");
                 });
 
-            modelBuilder.Entity("Data.CigaretteTables.CigarettesCategorie", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CigarettesCategories");
-                });
-
-            modelBuilder.Entity("Data.CigaretteTables.CigarettesManufacturer", b =>
+            modelBuilder.Entity("Data.CigaretteTables.Manufacturer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -86,7 +65,74 @@ namespace Data.Migrations
                     b.ToTable("CigarettesManufacturer");
                 });
 
-            modelBuilder.Entity("Data.CigaretteTables.CigarettesPhoto", b =>
+            modelBuilder.Entity("Data.CigaretteTables.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Brand")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("CategodyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ManufacturerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal?>("Price")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<int?>("Stock")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategodyId");
+
+                    b.HasIndex("ManufacturerId");
+
+                    b.ToTable("СigarettesProducts");
+                });
+
+            modelBuilder.Entity("Data.CigaretteTables.ProductCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CigarettesCategories");
+                });
+
+            modelBuilder.Entity("Data.CigaretteTables.ProductPhoto", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -117,48 +163,6 @@ namespace Data.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("CigarettesPhotos");
-                });
-
-            modelBuilder.Entity("Data.CigaretteTables.СigarettesProduct", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Brand")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("CategodyId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ManufacturerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int?>("Stock")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategodyId");
-
-                    b.HasIndex("ManufacturerId");
-
-                    b.ToTable("СigarettesProducts");
                 });
 
             modelBuilder.Entity("Data.Client", b =>
@@ -208,6 +212,11 @@ namespace Data.Migrations
                     b.Property<DateTime>("PickupDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<decimal?>("TotalPrice")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
@@ -215,16 +224,11 @@ namespace Data.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("reservationStatus")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Reservation");
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("Data.ReservationItem", b =>
@@ -258,7 +262,7 @@ namespace Data.Migrations
 
                     b.HasIndex("ReservationId");
 
-                    b.ToTable("ReservationItem");
+                    b.ToTable("ReservationItems");
                 });
 
             modelBuilder.Entity("Data.Role", b =>
@@ -293,26 +297,15 @@ namespace Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Data.CigaretteTables.CigarettesPhoto", b =>
+            modelBuilder.Entity("Data.CigaretteTables.Product", b =>
                 {
-                    b.HasOne("Data.CigaretteTables.СigarettesProduct", "Product")
-                        .WithMany("CigarettesPhotos")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("Data.CigaretteTables.СigarettesProduct", b =>
-                {
-                    b.HasOne("Data.CigaretteTables.CigarettesCategorie", "Categorie")
+                    b.HasOne("Data.CigaretteTables.ProductCategory", "Categorie")
                         .WithMany()
                         .HasForeignKey("CategodyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.CigaretteTables.CigarettesManufacturer", "Manufacturer")
+                    b.HasOne("Data.CigaretteTables.Manufacturer", "Manufacturer")
                         .WithMany()
                         .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -321,6 +314,17 @@ namespace Data.Migrations
                     b.Navigation("Categorie");
 
                     b.Navigation("Manufacturer");
+                });
+
+            modelBuilder.Entity("Data.CigaretteTables.ProductPhoto", b =>
+                {
+                    b.HasOne("Data.CigaretteTables.Product", "Product")
+                        .WithMany("CigarettesPhotos")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Data.Reservation", b =>
@@ -336,7 +340,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.ReservationItem", b =>
                 {
-                    b.HasOne("Data.CigaretteTables.СigarettesProduct", "Product")
+                    b.HasOne("Data.CigaretteTables.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -353,7 +357,7 @@ namespace Data.Migrations
                     b.Navigation("Reservation");
                 });
 
-            modelBuilder.Entity("Data.CigaretteTables.СigarettesProduct", b =>
+            modelBuilder.Entity("Data.CigaretteTables.Product", b =>
                 {
                     b.Navigation("CigarettesPhotos");
                 });

@@ -1,4 +1,5 @@
 ﻿using Data.CigaretteTables;
+using Domain.UserDomain.Commands.Object;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Data
         
         public string? Comment {  get; set; }
 
-        public ReservationStatus reservationStatus;
+        public ReservationStatus Status;
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get;set; }
 

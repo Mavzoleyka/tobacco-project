@@ -26,7 +26,7 @@ namespace Data.CigaretteRepositories
             var DTOlist =  entity.CigarettesPhotos.ToList();
             try
             {
-                 СigarettesProduct product = new СigarettesProduct();
+                 Product product = new Product();
                  product.Name = entity.Name;
                  product.Description = entity.Description;
                  product.Stock = entity.Stock;
@@ -35,7 +35,7 @@ namespace Data.CigaretteRepositories
                  product.ManufacturerId = entity.ManufacturerId;
                  foreach (var item in DTOlist)
                  {
-                    CigarettesPhoto photo = new CigarettesPhoto();
+                    ProductPhoto photo = new ProductPhoto();
                     photo.Id = item.Id;
                     photo.IsMain = item.IsMain;
                     photo.Caption = item.Caption;

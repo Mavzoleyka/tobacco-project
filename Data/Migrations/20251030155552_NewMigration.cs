@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Data.Migrations
 {
     /// <inheritdoc />
-    public partial class v1 : Migration
+    public partial class NewMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,6 +40,10 @@ namespace Data.Migrations
                     table.PrimaryKey("PK_CigarettesManufacturer", x => x.Id);
                 });
 
+            
+
+            
+
             migrationBuilder.CreateTable(
                 name: "СigarettesProducts",
                 columns: table => new
@@ -49,6 +54,7 @@ namespace Data.Migrations
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     Stock = table.Column<int>(type: "int", nullable: true),
                     Brand = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Price = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: true),
                     CategodyId = table.Column<int>(type: "int", nullable: false),
                     ManufacturerId = table.Column<int>(type: "int", nullable: false),
                     IsDelete = table.Column<bool>(type: "bit", nullable: false)
@@ -71,6 +77,34 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Reservations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PickupDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TotalPrice = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: true),
+                    ClientId = table.Column<int>(type: "int", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            
+
+            migrationBuilder.CreateTable(
                 name: "CigarettesPhotos",
                 columns: table => new
                 {
@@ -79,17 +113,47 @@ namespace Data.Migrations
                     ImageURL = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Caption = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
                     IsMain = table.Column<bool>(type: "bit", nullable: false),
-                    IsDelete = table.Column<bool>(type: "bit", nullable: false),
-                    СigarettesProductId = table.Column<int>(type: "int", nullable: true)
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CigarettesPhotos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CigarettesPhotos_СigarettesProducts_СigarettesProductId",
-                        column: x => x.СigarettesProductId,
+                        name: "FK_CigarettesPhotos_СigarettesProducts_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "СigarettesProducts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReservationItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Quantity = table.Column<int>(type: "int", maxLength: 255, nullable: false),
+                    PriceAtBooking = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: true),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    ReservationId = table.Column<int>(type: "int", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReservationItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReservationItems_Reservations_ReservationId",
+                        column: x => x.ReservationId,
+                        principalTable: "Reservations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReservationItems_СigarettesProducts_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "СigarettesProducts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -103,9 +167,26 @@ namespace Data.Migrations
                 column: "ManufacturerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CigarettesPhotos_СigarettesProductId",
+                name: "IX_CigarettesPhotos_ProductId",
                 table: "CigarettesPhotos",
-                column: "СigarettesProductId");
+                column: "ProductId");
+
+            
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationItems_ProductId",
+                table: "ReservationItems",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReservationItems_ReservationId",
+                table: "ReservationItems",
+                column: "ReservationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_ClientId",
+                table: "Reservations",
+                column: "ClientId");
         }
 
         /// <inheritdoc />
@@ -114,8 +195,20 @@ namespace Data.Migrations
             migrationBuilder.DropTable(
                 name: "CigarettesPhotos");
 
+            
+
+            migrationBuilder.DropTable(
+                name: "ReservationItems");
+
+            
+
+            migrationBuilder.DropTable(
+                name: "Reservations");
+
             migrationBuilder.DropTable(
                 name: "СigarettesProducts");
+
+           
 
             migrationBuilder.DropTable(
                 name: "CigarettesCategories");

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Data.CigaretteTables
 {
-    public class СigarettesProduct : IDelete
+    public class Product : IDelete
     {
         [Key]
         public int Id { get; set; }
@@ -22,16 +23,18 @@ namespace Data.CigaretteTables
         public int? Stock { get; set; }
         [MaxLength(100)]
         public string? Brand { get; set; }
+        [Precision(10, 2)]
+        public decimal? Price { get; set; }
 
-        public CigarettesCategorie Categorie { get; set; } = null!;
+        public ProductCategory Categorie { get; set; } = null!;
         [ForeignKey(nameof(Categorie))]
         public int CategodyId { get; set; }
 
-        public CigarettesManufacturer Manufacturer { get; set; } = null!;
+        public Manufacturer Manufacturer { get; set; } = null!;
         [ForeignKey(nameof(Manufacturer))]
         public int ManufacturerId { get; set; }
 
-        public List<CigarettesPhoto> CigarettesPhotos { get; set; } = new List<CigarettesPhoto>();
+        public List<ProductPhoto> CigarettesPhotos { get; set; } = new List<ProductPhoto>();
 
         public bool IsDelete { get; set; } = false;
     }

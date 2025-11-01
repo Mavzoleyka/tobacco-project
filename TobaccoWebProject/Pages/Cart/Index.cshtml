@@ -1,0 +1,72 @@
+﻿@page
+@model TobaccoWebProject.Pages.Cart.IndexModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Корзина";
+}
+
+<section class="max-w-4xl mx-auto bg-white border-4 border-black p-8 mt-10">
+    <h1 class="text-3xl font-bold mb-8 text-center uppercase tracking-wide">
+        🛒 Ваша корзина
+    </h1>
+
+    @if (Model.Cart.Any())
+    {
+        <table class="w-full border-collapse border border-black mb-8">
+            <thead class="bg-yellow-100 border-b border-black">
+                <tr>
+                    <th class="p-2 border border-black text-left">Товар</th>
+                    <th class="p-2 border border-black text-center">Цена</th>
+                    <th class="p-2 border border-black text-center">Кол-во</th>
+                    <th class="p-2 border border-black text-center">Сумма</th>
+                    <th class="p-2 border border-black text-center">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Cart)
+                {
+                    <tr>
+                        <td class="p-2 border border-black">@item.ProductName</td>
+                        <td class="p-2 border border-black text-center">@item.Price ₽</td>
+                        <td class="p-2 border border-black text-center">@item.Quantity</td>
+                        <td class="p-2 border border-black text-center">@item.Total ₽</td>
+                        <td class="p-2 border border-black text-center">
+                            <form method="post" asp-page-handler="Remove" class="inline">
+                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                <button type="submit" class="text-red-700 font-semibold hover:underline">
+                                    Удалить
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="flex justify-between items-center">
+            <p class="text-xl font-bold">Итого: @Model.Cart.Sum(x => x.Total) ₽</p>
+
+            <form method="post" asp-page-handler="Clear">
+                <button type="submit"
+                        class="bg-gray-300 border border-black px-4 py-2 rounded hover:bg-gray-400 transition">
+                    Очистить корзину
+                </button>
+            </form>
+        </div>
+
+        <div class="text-center mt-8">
+            <a asp-page="/Reservations/Create"
+               class="inline-block bg-red-700 text-white px-10 py-3 text-lg font-bold uppercase tracking-wider
+                          hover:bg-red-800 hover:scale-105 transition-transform">
+                Перейти к бронированию →
+            </a>
+        </div>
+    }
+    else
+    {
+        <p class="text-center text-lg text-gray-600">
+            Ваша корзина пуста 😔<br />
+            <a asp-page="/Catalog/Index" class="text-red-700 font-bold underline">Перейти в каталог</a>
+        </p>
+    }
+</section>

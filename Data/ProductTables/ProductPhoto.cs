@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Data.CigaretteTables
 {
-    public class CigarettesPhoto : IDelete
+    public class ProductPhoto : IDelete
     {
         [Key]
         public int Id { get; set; }
@@ -18,7 +18,7 @@ namespace Data.CigaretteTables
         [MaxLength(300)]
         public string? Caption { get; set; }
         public bool IsMain { get; set; } = false;
-        public СigarettesProduct Product { get; set; } = null!;
+        public Product Product { get; set; } = null!;
         [ForeignKey(nameof(Product))]
         public int ProductId { get; set; }
         public bool IsDelete { get; set; } = false;

@@ -13,5 +13,6 @@ namespace Domain.CigaretteDomain.CigaretteProduct.Commands.Object
         public int Id { get; set; }
         public string? CategoryName { get; set; }
         public string? ManufacturerName { get; set; }
+        public decimal? Price { get; set; }
     }
 }

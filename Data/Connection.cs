@@ -11,10 +11,12 @@ namespace Data
 {
     public class Connection : DbContext
     {
-        public DbSet<СigarettesProduct> СigarettesProducts {  get; set; }
-        public DbSet<CigarettesPhoto> CigarettesPhotos { get; set; }
-        public DbSet<CigarettesCategorie> CigarettesCategories { get; set; }
-        public DbSet<CigarettesManufacturer> CigarettesManufacturer { get; set; }
+        public DbSet<Product> СigarettesProducts {  get; set; }
+        public DbSet<ProductPhoto> CigarettesPhotos { get; set; }
+        public DbSet<ProductCategory> CigarettesCategories { get; set; }
+        public DbSet<Manufacturer> CigarettesManufacturer { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<ReservationItem> ReservationItems { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Role> Roles { get; set; }
         public Connection(DbContextOptions<Connection> options) : base(options)
@@ -47,28 +49,45 @@ namespace Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //enum для бд
+            
             modelBuilder.Entity<Reservation>()
-            .Property(x => x.reservationStatus)
-            .HasConversion<string>()      
-            .HasMaxLength(20);
+                .Property(x => x.Status)
+                .HasConversion<string>()
+                .HasMaxLength(20);
 
-            modelBuilder.Entity<ReservationItem>().HasQueryFilter(row => !row.IsDelete);
-            modelBuilder.Entity<Reservation>().HasQueryFilter(row => !row.IsDelete);
-            modelBuilder.Entity< СigarettesProduct>().HasQueryFilter(row=>!row.IsDelete);
-            modelBuilder.Entity<CigarettesPhoto>().HasQueryFilter(row => !row.IsDelete);
-            modelBuilder.Entity<CigarettesCategorie>().HasQueryFilter(row => !row.IsDelete);
-            modelBuilder.Entity<CigarettesManufacturer>().HasQueryFilter(row => !row.IsDelete);
+            
+            modelBuilder.Entity<Reservation>()
+                .Property(x => x.TotalPrice)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<ReservationItem>()
+                .Property(x => x.PriceAtBooking)
+                .HasPrecision(10, 2);
+
+            
+            modelBuilder.Entity<Reservation>().HasQueryFilter(x => !x.IsDelete);
+            modelBuilder.Entity<ReservationItem>().HasQueryFilter(x => !x.IsDelete);
+            modelBuilder.Entity<Product>().HasQueryFilter(x => !x.IsDelete);
+            modelBuilder.Entity<ProductPhoto>().HasQueryFilter(x => !x.IsDelete);
+            modelBuilder.Entity<ProductCategory>().HasQueryFilter(x => !x.IsDelete);
+            modelBuilder.Entity<Manufacturer>().HasQueryFilter(x => !x.IsDelete);
+
+            
             modelBuilder.Entity<Client>()
                 .HasMany(e => e.Roles)
                 .WithMany(e => e.Clients)
-                .UsingEntity<Dictionary<string, object>>("ClientRole",
-                row => row.HasOne<Role>().WithMany().HasForeignKey("RoleId"),
-                row => row.HasOne<Client>().WithMany().HasForeignKey("ClientId"),
-                row =>
-                {
-                    row.HasKey("ClientId", "RoleId");
-                });
+                .UsingEntity<Dictionary<string, object>>(
+                    "ClientRole",
+                    j => j.HasOne<Role>().WithMany().HasForeignKey("RoleId"),
+                    j => j.HasOne<Client>().WithMany().HasForeignKey("ClientId"),
+                    j => { j.HasKey("ClientId", "RoleId"); });
+
+            
+            modelBuilder.Entity<Reservation>()
+                .HasMany(r => r.Items)
+                .WithOne(i => i.Reservation)
+                .HasForeignKey(i => i.ReservationId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }

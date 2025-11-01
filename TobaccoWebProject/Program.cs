@@ -19,10 +19,12 @@ using Domain.CigaretteDomain.CigaretteProduct.Commands;
 using Domain.CigaretteDomain.CigaretteProduct.Commands.Object;
 using Domain.CigaretteDomain.CigaretteProduct.Querys;
 using Domain.CigaretteDomain.CigaretteProduct.Querys.Object;
+using Domain.UserDomain.Commands.Reservations;
+using Domain.UserDomain.Services;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Service;
 using System.Reflection;
-
 using System.Security.Claims;
 
 namespace TobaccoWebProject
@@ -40,6 +42,7 @@ namespace TobaccoWebProject
             string? path = builder.Configuration.GetConnectionString("sql");
             if(path == null) throw new ArgumentNullException(nameof(path));
             builder.Services.AddDbContext<Connection>(row=>row.UseSqlServer(path));
+
 
             var domainAssembliesService = Directory
             .GetFiles(AppContext.BaseDirectory, "*Domain.dll")
@@ -63,8 +66,13 @@ namespace TobaccoWebProject
                                                    .WithScopedLifetime()
                                                     );
 
+            builder.Services.AddMediatR(cfg =>
+            cfg.RegisterServicesFromAssembly(typeof(CreateReservationCommand).Assembly));
+
 
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddSession();
+            builder.Services.AddScoped<CartService>();
 
             builder.Services.AddAuthentication("Cookies")
                             .AddCookie("Cookies", option =>
@@ -97,6 +105,8 @@ namespace TobaccoWebProject
 
             app.UseRouting();
             app.UseStaticFiles();
+
+            app.UseSession();
 
             app.UseAuthentication();
 

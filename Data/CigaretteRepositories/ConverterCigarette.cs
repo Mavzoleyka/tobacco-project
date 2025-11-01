@@ -13,7 +13,7 @@ namespace Data.CigaretteRepositories
 {
     public static class ConverterCigarette 
     {
-        public static async Task<CigaretteManufacturerDTO?> ParseAsync(this Task<CigarettesManufacturer?> element)
+        public static async Task<CigaretteManufacturerDTO?> ParseAsync(this Task<Manufacturer?> element)
         {
             var manufacturer = await element;
             if (manufacturer == null) return null;
@@ -24,7 +24,7 @@ namespace Data.CigaretteRepositories
             return item;
         }
 
-        public static async Task<CigaretteCategoryDTO?> ParseAsync(this Task<CigarettesCategorie?> element)
+        public static async Task<CigaretteCategoryDTO?> ParseAsync(this Task<ProductCategory?> element)
         {
             var category = await element;
             if (category == null) return null;
@@ -34,7 +34,7 @@ namespace Data.CigaretteRepositories
             return item;
         }
 
-        public static async Task<CigaretteProductDTO?> ParseAsync(this Task<СigarettesProduct?> element)
+        public static async Task<CigaretteProductDTO?> ParseAsync(this Task<Product?> element)
         {
             var entity = await element;
             if (entity == null) return null;
@@ -61,7 +61,7 @@ namespace Data.CigaretteRepositories
             return product;
         }
 
-        public static async Task<CigarettePhotoDTO?> ParseAsync(this Task<CigarettesPhoto?> element)
+        public static async Task<CigarettePhotoDTO?> ParseAsync(this Task<ProductPhoto?> element)
         {
             var entity = await element;
             if (entity == null) return null;

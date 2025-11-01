@@ -27,7 +27,7 @@ namespace Data.CigaretteRepositories
                 return false;
             }
 
-            var photo = new CigarettesPhoto
+            var photo = new ProductPhoto
             {
                 ImageURL = entity.ImageURL,
                 Caption = entity.Caption,

@@ -23,7 +23,7 @@ namespace Data
 
         [ForeignKey(nameof(Product))]
         public int ProductId { get; set; }
-        public СigarettesProduct Product { get; set; } = null!;
+        public Product Product { get; set; } = null!;
         [ForeignKey(nameof(Reservation))]
         public int ReservationId { get; set; }
         public Reservation Reservation { get; set; } = null!;

@@ -22,7 +22,7 @@ namespace Data.CigaretteRepositories
         {
             try
             {
-                CigarettesCategorie obj = new CigarettesCategorie();
+                ProductCategory obj = new ProductCategory();
                 obj.Name = entity.Name;
                 await _connection.AddAsync(obj);
                 await _connection.SaveChangesAsync();

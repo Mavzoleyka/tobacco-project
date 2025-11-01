@@ -22,7 +22,7 @@ namespace Data.CigaretteRepositories
         {
             try
             {
-                CigarettesManufacturer manufacturer = new CigarettesManufacturer();
+                Manufacturer manufacturer = new Manufacturer();
                 manufacturer.Name = obj.Name;
                 manufacturer.Country = obj.Country;
 
