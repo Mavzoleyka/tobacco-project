@@ -1,21 +1,25 @@
+using Data;
 using Domain.UserDomain.Commands.Object;
 using Domain.UserDomain.Commands.Reservations;
+using Domain.UserDomain.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace TobaccoWebProject.Pages.Reservations
 {
-    public class CreateModel : PageModel
+    public partial class CreateModel : PageModel
     {
         
             private readonly IMediator _mediator;
+            private readonly CartService _cartService;
 
-            public CreateModel(IMediator mediator)
+        public CreateModel(IMediator mediator, CartService cartService)
             {
                 _mediator = mediator;
-            }
+                _cartService = cartService;
+        }
 
             [BindProperty]
             public ReservationInputModel Input { get; set; } = new();
@@ -28,48 +32,72 @@ namespace TobaccoWebProject.Pages.Reservations
 
             public void OnGet()
             {
-                
-            }
-
-            public async Task<IActionResult> OnPostAsync()
-            {
-                if (!ModelState.IsValid)
-                    return Page();
-
-                try
+                if (Input.PickupDateTime == default)
                 {
-                    var dto = new CreateReservationDTO
-                    {
-                        ClientId = 1, 
-                        PickupDateTime = Input.PickupDateTime,
-                        Comment = Input.Comment,
-                        Items = new List<CreateReservationItemDTO>()
-                    };
-
-                    var command = new CreateReservationCommand(dto);
-
-                    int reservationId = await _mediator.Send(command);
-
-                    SuccessMessage = $"Бронь №{reservationId} успешно создана!";
-                    return RedirectToPage("/Reservations/Success");
-                }
-                catch (Exception ex)
-                {
-                    ErrorMessage = "Ошибка при создании брони: " + ex.Message;
-                    return Page();
+                    Input.PickupDateTime = DateTime.Now.AddMinutes(30);
                 }
             }
 
-            public class ReservationInputModel
-            {
-                [Required(ErrorMessage = "Укажите время самовывоза")]
-                [Display(Name = "Время самовывоза")]
-                public DateTime PickupDateTime { get; set; }
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+                return Page();
 
-                [MaxLength(100)]
-                [Display(Name = "Комментарий (необязательно)")]
-                public string? Comment { get; set; }
+            var clientIdClaim = User.FindFirst("ClientId");
+            if (clientIdClaim == null)
+            {
+                TempData["ErrorMessage"] = "Не удалось определить пользователя. Пожалуйста, войдите снова.";
+                return RedirectToPage("/Account/Login");
             }
+
+            int clientId = int.Parse(clientIdClaim.Value);
+
+           
+            var cart = _cartService.GetCart();
+
+            if (!cart.Any())
+            {
+                TempData["ErrorMessage"] = "Корзина пуста. Добавьте товары перед бронированием.";
+                return RedirectToPage("/Catalog/Index");
+            }
+
+            
+            var dto = new CreateReservationDTO
+            {
+                ClientId = clientId,
+                PickupDateTime = Input.PickupDateTime,
+                Comment = Input.Comment,
+                Items = cart.Select(c => new CreateReservationItemDTO
+                {
+                    ProductId = c.ProductId,
+                    Quantity = c.Quantity,
+                    PriceAtBooking = c.Price
+                }).ToList()
+            };
+
+            try
+            {
+                int reservationId = await _mediator.Send(new CreateReservationCommand(dto));
+
+                _cartService.Clear();
+
+                TempData["SuccessMessage"] = $"Бронь №{reservationId} успешно создана!";
+                return RedirectToPage("/Reservations/My");
+            }
+            catch (DbUpdateException dbEx)
+            {
+                Console.WriteLine($"[DB ERROR] {dbEx.InnerException?.Message ?? dbEx.Message}");
+                TempData["ErrorMessage"] = "Не удалось создать бронь. Проверьте данные и попробуйте снова.";
+                return RedirectToPage("/Reservations/Create");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] {ex.Message}");
+                TempData["ErrorMessage"] = "Произошла ошибка при создании брони.";
+                return RedirectToPage("/Reservations/Create");
+            }
+        }
+    
         
         
     }

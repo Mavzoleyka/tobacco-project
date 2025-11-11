@@ -1,0 +1,12 @@
+﻿@model int
+
+<a asp-page="/Cart/Index"
+   class="relative inline-block text-2xl text-gray-800 hover:text-red-700 transition">
+    🛒
+    @if (Model > 0)
+    {
+        <span class="absolute -top-2 -right-3 bg-red-700 text-white text-xs font-bold rounded-full px-1.5 shadow">
+            @Model
+        </span>
+    }
+</a>

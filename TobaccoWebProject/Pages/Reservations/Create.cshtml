@@ -16,9 +16,9 @@
     <form method="post" class="space-y-6">
         <div>
             <label asp-for="Input.PickupDateTime" class="block font-bold mb-2"></label>
-            <input asp-for="Input.PickupDateTime"
-                   type="datetime-local"
-                   class="w-full border-2 border-black px-3 py-2" />
+            <input asp-for="Input.PickupDateTime" type="datetime-local"
+                   value="@DateTime.Now.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm")"
+                   class="border border-black p-2 w-full rounded" />
             <span asp-validation-for="Input.PickupDateTime" class="text-red-600 text-sm"></span>
         </div>
 
@@ -31,7 +31,20 @@
         </div>
 
         <button type="submit"
-                class="bg-[#D32F2F] text-white font-bold px-6 py-3 uppercase tracking-wider hover:bg-red-800 transition">
+                style="
+            background-color: #B71C1C;
+            color: white;
+            font-weight: 800;
+            border: 3px solid black;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: inset 0 0 0 2px #000;
+            transition: all 0.2s ease-in-out;
+        "
+                onmouseover="this.style.backgroundColor='#D32F2F'"
+                onmouseout="this.style.backgroundColor='#B71C1C'">
             Забронировать
         </button>
     </form>

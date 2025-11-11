@@ -19,6 +19,7 @@ namespace Domain.CigaretteDomain.CigaretteProduct.Commands.Object
         public int? Stock { get; set; }
         [MaxLength(100)]
         public string? Brand { get; set; }
+        public decimal? Price { get; set; }
         public int CategoryId { get; set; }
         public int ManufacturerId { get; set; }
 

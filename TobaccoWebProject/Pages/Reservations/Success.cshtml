@@ -1,0 +1,21 @@
+﻿@page
+@model TobaccoWebProject.Pages.Reservations.SuccessModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Бронь успешно создана";
+}
+
+<section class="max-w-2xl mx-auto bg-white border-4 border-black p-10 mt-16 text-center">
+    <h1 class="text-3xl font-bold text-green-700 mb-6">✅ Бронь успешно создана!</h1>
+    <p class="text-lg mb-4">
+        Спасибо за бронирование. Мы уже начали собирать ваш заказ.
+    </p>
+    <p class="text-sm text-gray-600 mb-8">
+        Номер брони: <strong>@Model.ReservationId</strong><br />
+        Дата самовывоза: <strong>@Model.PickupDateTime.ToString("f")</strong>
+    </p>
+    <a asp-page="/Catalog/Index"
+       class="inline-block bg-red-700 text-white px-8 py-3 font-bold uppercase hover:bg-red-800 transition">
+        Вернуться в каталог
+    </a>
+</section>

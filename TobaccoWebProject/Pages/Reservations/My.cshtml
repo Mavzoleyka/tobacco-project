@@ -1,0 +1,52 @@
+﻿@page "/account/reservations"
+@model TobaccoWebProject.Pages.Reservations.MyModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Мои брони";
+}
+
+<div class="container mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold mb-8 text-center uppercase">Мои брони</h1>
+
+    @if (Model.Reservations.Any())
+    {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach (var r in Model.Reservations)
+            {
+                <div class="bg-white border-4 border-black shadow-md rounded-none p-6 relative hover:scale-105 transition-transform">
+                    <h2 class="text-xl font-bold mb-3">Бронь №@r.Id</h2>
+
+                    <p class="mb-1"><strong>📅 Дата самовывоза:</strong> @r.PickupDateTime.ToString("dd.MM.yyyy HH:mm")</p>
+                    <p class="mb-1">
+                        <strong>💬 Комментарий:</strong>
+                        @(string.IsNullOrWhiteSpace(r.Comment) ? "—" : r.Comment)
+                    </p>
+                    <p class="mb-1"><strong>📦 Статус:</strong> <span class="font-semibold">@r.ReservationStatus</span></p>
+                    <p class="mb-1"><strong>💰 Сумма:</strong> @(r.TotalPrice?.ToString("0.00 ₽") ?? "—")</p>
+
+                    <details class="mt-4">
+                        <summary class="cursor-pointer text-sm text-gray-700 underline hover:text-gray-900">Показать товары</summary>
+                        <ul class="mt-2 list-disc list-inside text-sm">
+                            @foreach (var item in r.Items)
+                            {
+                                <li>
+                                    <span class="font-semibold">@item.ProductName</span> — @item.Quantity шт. × @(item.PriceAtBooking?.ToString("0.00 ₽") ?? "—")
+                                </li>
+                            }
+                        </ul>
+                    </details>
+
+                    <div class="absolute top-2 right-2 text-xs bg-yellow-400 text-black px-2 py-1 font-bold uppercase rounded">
+                        @r.ReservationStatus
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center text-gray-600 text-lg">
+            У вас пока нет активных броней 😔
+        </div>
+    }
+</div>

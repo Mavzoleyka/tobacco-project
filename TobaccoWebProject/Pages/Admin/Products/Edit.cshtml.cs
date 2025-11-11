@@ -49,6 +49,7 @@ namespace TobaccoWebProject.Pages.Admin.Products
                 Description = product.Description,
                 Brand = product.Brand,
                 CategoryId = product.CategoryId,
+                Price = product.Price,
                 ManufacturerId = product.ManufacturerId,
                 Stock = product.Stock,
             };

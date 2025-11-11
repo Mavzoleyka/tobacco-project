@@ -1,0 +1,36 @@
+﻿@page
+@model TobaccoWebProject.Pages.Notifications.MyModel
+@{
+    ViewData["Title"] = "Мои уведомления";
+    Layout = "_Layout";
+}
+
+<div class="container mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold mb-6">Мои уведомления</h1>
+
+    @if (!Model.Notifications.Any())
+    {
+        <p class="text-gray-600">Пока уведомлений нет.</p>
+    }
+    else
+    {
+        <div class="space-y-4">
+            @foreach (var note in Model.Notifications.OrderByDescending(n => n.CreatedAt))
+            {
+                <div class="border-l-4 @(note.IsRead ? "border-gray-400" : "border-blue-500") pl-4 py-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-800">@note.Message</span>
+                        <span class="text-sm text-gray-500">@note.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</span>
+                    </div>
+                    @if (note.ReservationId.HasValue)
+                    {
+                        <a asp-page="/Reservations/My" asp-route-id="@note.ReservationId"
+                           class="text-sm text-blue-600 hover:underline">
+                            Перейти к брони №@note.ReservationId
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

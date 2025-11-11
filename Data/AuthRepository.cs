@@ -29,11 +29,14 @@ namespace Data
                                         row.Password == password);
             if (client != null)
             {
-                User user = new User();
-                user.Login = login;
-                user.Rules = client.Roles.Select(row => row.Value).ToList();
-                return user;
+                return new User
+                {
+                    Id = client.Id,                                    
+                    Login = client.Login,
+                    Rules = client.Roles.Select(row => row.Value).ToList()
+                };
             }
+
             return null;
         }
 
@@ -43,20 +46,26 @@ namespace Data
                                   .Any(row => row.Login.ToLower() == login.ToLower());
             if (!any)
             {
-                Client row = new Client();
-                row.Login = login.ToLower();
-                row.Password = password;
                 var role = _connection.Roles.FirstOrDefault(row => row.Value == "User");
-                row.Roles = new List<Role>() { role };
-                _connection.Clients.Add(row);
-                if (_connection.SaveChanges() > 0)
+
+                var newClient = new Client
                 {
-                    User user = new User();
-                    user.Login = login;
-                    user.Rules = new List<string>() { role.Value };
-                    return user;
-                }
+                    Login = login.ToLower(),
+                    Password = password,
+                    Roles = new List<Role> { role }
+                };
+
+                _connection.Clients.Add(newClient);
+                _connection.SaveChanges(); 
+
+                return new User
+                {
+                    Id = newClient.Id,                               
+                    Login = newClient.Login,
+                    Rules = new List<string> { role.Value }
+                };
             }
+
             return null;
         }
     }

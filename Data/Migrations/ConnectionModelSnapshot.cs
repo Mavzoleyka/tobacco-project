@@ -185,6 +185,77 @@ namespace Data.Migrations
                     b.ToTable("Clients");
                 });
 
+            modelBuilder.Entity("Data.LogTables.ReservationStatusLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ChangedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("NewStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OldStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReservationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReservationId");
+
+                    b.ToTable("ReservationStatusLogs");
+                });
+
+            modelBuilder.Entity("Data.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int?>("ReservationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("ReservationId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("Data.Reservation", b =>
                 {
                     b.Property<int>("Id")
@@ -324,6 +395,34 @@ namespace Data.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Data.LogTables.ReservationStatusLog", b =>
+                {
+                    b.HasOne("Data.Reservation", "Reservation")
+                        .WithMany("StatusLogs")
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Reservation");
+                });
+
+            modelBuilder.Entity("Data.Notification", b =>
+                {
+                    b.HasOne("Data.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Reservation", "Reservation")
+                        .WithMany()
+                        .HasForeignKey("ReservationId");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Reservation");
+                });
+
             modelBuilder.Entity("Data.Reservation", b =>
                 {
                     b.HasOne("Data.Client", "Client")
@@ -362,6 +461,8 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Reservation", b =>
                 {
                     b.Navigation("Items");
+
+                    b.Navigation("StatusLogs");
                 });
 #pragma warning restore 612, 618
         }

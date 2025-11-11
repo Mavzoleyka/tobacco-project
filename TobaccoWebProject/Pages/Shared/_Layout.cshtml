@@ -18,9 +18,13 @@
                 <a asp-page="/Catalog/Index" class="hover:text-gray-900 transition">Каталог</a>
                 <a asp-page="/About" class="hover:text-gray-900 transition">О магазине</a>
                 <a asp-page="/Contact" class="hover:text-gray-900 transition">Контакты</a>
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <a asp-page="/Reservations/My" class="hover:text-gray-900 transition">Мои брони</a>
+                }
             </nav>
 
-            <div class="flex items-center space-x-3 text-gray-800">
+            <div class="flex items-center space-x-5 text-gray-800">
                 @if (User.Identity?.IsAuthenticated ?? false)
                 {
                     <span class="text-sm">👤 @User.Identity.Name</span>
@@ -36,8 +40,8 @@
                     <form asp-page="/Account/Logout" method="post" class="inline">
                         <button type="submit"
                                 class="bg-[#FFEB3B] text-black border-4 border-black px-6 py-2 uppercase tracking-widest
-                                font-extrabold rounded-none shadow-inner hover:shadow-lg hover:scale-105
-                                transition-transform duration-200">
+                        font-extrabold rounded-none shadow-inner hover:shadow-lg hover:scale-105
+                        transition-transform duration-200">
                             Выйти
                         </button>
                     </form>
@@ -49,14 +53,38 @@
                         Войти
                     </a>
                 }
+                <a asp-page="/Notifications/My"
+                   class="relative text-gray-800 hover:text-blue-700 transition">
+                    🔔 Уведомления
+                </a>
+
+                <!--  корзина -->
+                <vc:cart-widget />
             </div>
-        </div>
     </header>
 
     
     <main class="flex-grow container mx-auto px-4 py-10">
         @RenderBody()
     </main>
+    @if (TempData["SuccessMessage"] is string message)
+    {
+        <div id="toast"
+             class="fixed top-5 right-5 bg-green-600 text-white font-semibold px-6 py-3 rounded-lg shadow-lg
+                    transition-opacity duration-700 opacity-100 z-50">
+            ✅ @message
+        </div>
+
+        <script>
+            setTimeout(() => {
+                const toast = document.getElementById('toast');
+                if (toast) {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 700);
+                }
+            }, 3000);
+        </script>
+    }
 
    
     <footer class="bg-[#FFF3C4] text-center py-6 mt-8 text-sm text-gray-700 shadow-inner">

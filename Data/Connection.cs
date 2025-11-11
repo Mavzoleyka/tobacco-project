@@ -1,4 +1,5 @@
 ﻿using Data.CigaretteTables;
+using Data.LogTables;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using System;
@@ -19,6 +20,8 @@ namespace Data
         public DbSet<ReservationItem> ReservationItems { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<ReservationStatusLog> ReservationStatusLogs { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
         public Connection(DbContextOptions<Connection> options) : base(options)
         {
             
@@ -28,21 +31,20 @@ namespace Data
         public override Task<int> SaveChangesAsync(CancellationToken ct = default)
         {
             var now = DateTime.UtcNow;
+
             foreach (var entry in ChangeTracker.Entries())
             {
-                if (entry.Entity is Reservation or ReservationItem)
+                if (entry.Entity is Reservation)
                 {
                     if (entry.State == EntityState.Added)
-                    {
                         entry.CurrentValues["CreatedAt"] = now;
-                        entry.CurrentValues["UpdatedAt"] = now;
-                    }
-                    else if (entry.State == EntityState.Modified)
-                    {
-                        entry.CurrentValues["UpdatedAt"] = now;
-                    }
+
+                    entry.CurrentValues["UpdatedAt"] = now;
                 }
+
+                
             }
+
             return base.SaveChangesAsync(ct);
         }
 
@@ -71,8 +73,9 @@ namespace Data
             modelBuilder.Entity<ProductPhoto>().HasQueryFilter(x => !x.IsDelete);
             modelBuilder.Entity<ProductCategory>().HasQueryFilter(x => !x.IsDelete);
             modelBuilder.Entity<Manufacturer>().HasQueryFilter(x => !x.IsDelete);
+            modelBuilder.Entity<Notification>().HasQueryFilter(x => !x.IsDelete);
+            modelBuilder.Entity<ReservationStatusLog>().HasQueryFilter(x => !x.IsDelete);
 
-            
             modelBuilder.Entity<Client>()
                 .HasMany(e => e.Roles)
                 .WithMany(e => e.Clients)

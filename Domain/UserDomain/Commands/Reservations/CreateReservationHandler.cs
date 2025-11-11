@@ -10,6 +10,7 @@ namespace Domain.UserDomain.Commands.Reservations
     public class CreateReservationHandler : IRequestHandler<CreateReservationCommand, int>
     {
         private readonly IReservationRepository _repository;
+
         public CreateReservationHandler(IReservationRepository repository)
         {
             _repository = repository;
@@ -17,10 +18,18 @@ namespace Domain.UserDomain.Commands.Reservations
 
         public async Task<int> Handle(CreateReservationCommand request, CancellationToken cancellationToken)
         {
-            if (request.DTO.PickupDateTime < DateTime.UtcNow.AddMinutes(30))
+            var dto = request.DTO;
+
+            
+            if (dto.PickupDateTime < DateTime.UtcNow.AddMinutes(30))
                 throw new InvalidOperationException("Бронь должна быть минимум за 30 минут.");
 
-            var reservationId = await _repository.AddReservationAsync(request.DTO);
+            
+            dto.TotalPrice = dto.Items.Sum(i => i.PriceAtBooking * i.Quantity);
+
+            
+            var reservationId = await _repository.AddReservationAsync(dto);
+
             return reservationId;
         }
     }

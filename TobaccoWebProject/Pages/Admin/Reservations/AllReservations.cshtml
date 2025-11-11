@@ -1,0 +1,127 @@
+﻿@page "/Reservations"
+@using Domain.UserDomain.Commands.Object
+@model TobaccoWebProject.Pages.Admin.Reservations.AllReservationsModel
+@{
+    ViewData["Title"] = "Управление бронями";
+    Layout = "_AdminLayout";
+}
+<div>
+    <form method="get" class="mb-4 flex items-center space-x-2">
+        <label class="font-medium">Фильтр по статусу:</label>
+        <select name="status" class="border rounded px-2 py-1" onchange="this.form.submit()">
+            <option value="">Все</option>
+            @foreach (var status in Enum.GetValues(typeof(ReservationStatus)))
+            {
+                <option value="@status" selected="@(Model.CurrentStatus == (ReservationStatus?)status)">
+                    @status
+                </option>
+            }
+        </select>
+    </form>
+    <form method="get" class="flex space-x-4 mb-6">
+        <div>
+            <label for="StartDate" class="block text-sm font-semibold">С даты:</label>
+            <input type="date" id="StartDate" name="StartDate"
+                   value="@Model.StartDate?.ToString("yyyy-MM-dd")"
+                   class="border px-3 py-1 rounded" />
+        </div>
+        <div>
+            <label for="EndDate" class="block text-sm font-semibold">По дату:</label>
+            <input type="date" id="EndDate" name="EndDate"
+                   value="@Model.EndDate?.ToString("yyyy-MM-dd")"
+                   class="border px-3 py-1 rounded" />
+        </div>
+        <button type="submit"
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+            Применить
+        </button>
+    </form>
+</div>
+
+<div class="container mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold mb-6">Управление бронями</h1>
+
+    @if (TempData["SuccessMessage"] is string msg)
+    {
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 mb-4 rounded">
+            ✅ @msg
+        </div>
+    }
+    <form method="get" class="mb-6 flex space-x-4 items-center">
+        <label for="status" class="font-medium">Фильтр по статусу:</label>
+        <select id="status" name="CurrentStatus" class="border rounded px-2 py-1">
+            <option value="">Все</option>
+            @foreach (var s in Enum.GetValues(typeof(ReservationStatus)))
+            {
+                <option value="@s" selected="@(Model.CurrentStatus == (ReservationStatus?)s)">
+                    @s
+                </option>
+            }
+        </select>ну 
+        <button type="submit"
+                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
+            Применить
+        </button>
+    </form>
+    @if (TempData["SuccessMessage"] is string success)
+    {
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 mb-4 rounded">
+            ✅ @success
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] is string error)
+    {
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 mb-4 rounded">
+            ⚠️ @error
+        </div>
+    }
+    <table class="min-w-full bg-white border border-gray-300">
+        <thead class="bg-gray-100 text-gray-800">
+            <tr>
+                <th class="px-4 py-2 border">ID</th>
+                <th class="px-4 py-2 border">Клиент</th>
+                <th class="px-4 py-2 border">Дата самовывоза</th>
+                <th class="px-4 py-2 border">Комментарий</th>
+                <th class="px-4 py-2 border">Статус</th>
+                <th class="px-4 py-2 border">Действие</th>
+                <th class="px-4 py-2 border text-center">Подробнее</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reservation in Model.Reservations)
+            {
+                <tr class="border-t">
+                    <td class="px-4 py-2">@reservation.Id</td>
+                    <td class="px-4 py-2">@reservation.ClientId</td>
+                    <td class="px-4 py-2">@reservation.PickupDateTime.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                    <td class="px-4 py-2">@reservation.Comment</td>
+                    <td class="px-4 py-2">
+                        <form method="post" asp-page-handler="UpdateStatus" class="flex items-center space-x-2">
+                            <input type="hidden" name="ReservationId" value="@reservation.Id" />
+                            <select name="NewStatus" class="border rounded px-2 py-1">
+                                @foreach (var status in Enum.GetValues(typeof(ReservationStatus)))
+                                {
+                                    <option value="@status" selected="@(reservation.ReservationStatus == (ReservationStatus)status)">
+                                        @status
+                                    </option>
+                                }
+                            </select>
+                            <button type="submit"
+                                    class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
+                                Обновить
+                            </button>
+                        </form>
+                    </td>
+                    <td class="px-4 py-2 text-sm text-gray-600">@reservation.TotalPrice?.ToString("0.00") ₽</td>
+                    <td class="px-4 py-2 text-center">
+                        <a asp-page="/Admin/Reservations/Details" asp-route-id="@reservation.Id"
+                           class="inline-block bg-yellow-400 text-black text-sm px-3 py-1 rounded hover:bg-yellow-500 transition">
+                            Подробнее →
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

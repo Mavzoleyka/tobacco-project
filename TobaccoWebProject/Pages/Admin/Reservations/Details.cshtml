@@ -1,0 +1,134 @@
+﻿@page "/Reservations/Details/{id:int}"
+@using Domain.UserDomain.Commands.Object
+@model TobaccoWebProject.Pages.Admin.Reservations.DetailsModel
+@{
+    ViewData["Title"] = $"Бронь №{Model.Reservation.Id}";
+    Layout = "_AdminLayout";
+}
+
+<h1 class="text-2xl font-bold mb-6">Бронь №@Model.Reservation.Id</h1>
+
+<div class="bg-white p-6 rounded-lg shadow-md mb-6">
+    <p><strong>Дата самовывоза:</strong> @Model.Reservation.PickupDateTime.ToString("dd.MM.yyyy HH:mm")</p>
+    <p><strong>Комментарий:</strong> @(Model.Reservation.Comment ?? "—")</p>
+    <p><strong>Статус:</strong> @Model.Reservation.ReservationStatus</p>
+    <p><strong>Сумма:</strong> @(Model.Reservation.TotalPrice?.ToString("C") ?? "—")</p>
+</div>
+
+<h2 class="text-xl font-semibold mt-8 mb-3">Товары</h2>
+<table class="min-w-full border">
+    <thead>
+        <tr class="bg-gray-100">
+            <th class="p-2 text-left">Название</th>
+            <th class="p-2 text-center">Кол-во</th>
+            <th class="p-2 text-center">Цена</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Reservation.Items)
+        {
+            <tr class="border-t">
+                <td class="p-2">@item.ProductName</td>
+                <td class="p-2 text-center">@item.Quantity</td>
+                <td class="p-2 text-center">@item.PriceAtBooking?.ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.Reservation != null)
+{
+    <h2 class="text-xl font-semibold mb-3">Статус заказа</h2>
+
+    
+        
+        var allStatuses = new[]
+        {
+            ReservationStatus.Pending,
+            ReservationStatus.Confirmed,
+            ReservationStatus.Ready,
+            ReservationStatus.PickedUp,
+            ReservationStatus.Canceled,
+            ReservationStatus.Expired
+        };
+
+       
+        var currentIndex = Array.IndexOf(allStatuses, Model.Reservation.ReservationStatus);
+
+        
+        var percent = currentIndex >= 0 && currentIndex < 4
+            ? (int)((double)(currentIndex + 1) / 4 * 100)
+            : 100;
+    
+
+    <div class="w-full mb-6">
+        <div class="flex justify-between text-xs font-medium text-gray-600 mb-1">
+            @foreach (var status in allStatuses.Take(4))
+            {
+                <span class="@(status == Model.Reservation.ReservationStatus ? "text-black font-bold" : "text-gray-400")">
+                    @status
+                </span>
+            }
+        </div>
+
+        <div class="h-3 w-full bg-gray-200 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-yellow-400 via-blue-400 to-green-500 transition-all duration-700"
+                 style="width:@percent%">
+            </div>
+        </div>
+    </div>
+}
+
+<h2 class="text-xl font-semibold mt-8 mb-3">История изменений</h2>
+
+@if (Model.Reservation.Logs?.Any() ?? false)
+{
+    <div class="relative border-l-4 border-gray-300 pl-6 space-y-6">
+        @foreach (var log in Model.Reservation.Logs.OrderBy(l => l.ChangedAt))
+        {
+            string statusIcon = log.NewStatus switch
+            {
+                ReservationStatus.Pending => "⏳",
+                ReservationStatus.Confirmed => "📦",
+                ReservationStatus.Ready => "🚚",
+                ReservationStatus.PickedUp => "✅",
+                ReservationStatus.Canceled => "❌",
+                ReservationStatus.Expired => "⌛",
+                _ => "🔘"
+            };
+
+            string color = log.NewStatus switch
+            {
+                ReservationStatus.Pending => "from-yellow-400 to-yellow-200",
+                ReservationStatus.Confirmed => "from-blue-500 to-blue-300",
+                ReservationStatus.Ready => "from-green-500 to-green-300",
+                ReservationStatus.PickedUp => "from-emerald-600 to-green-400",
+                ReservationStatus.Canceled => "from-red-600 to-red-400",
+                ReservationStatus.Expired => "from-gray-500 to-gray-300",
+                _ => "from-gray-400 to-gray-200"
+            };
+
+            <div class="relative group transition-transform duration-200 hover:scale-[1.02]">
+               
+                <div class="absolute -left-3 top-1 w-5 h-5 rounded-full border-4 border-white bg-gradient-to-b @color shadow-md"></div>
+
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 transition hover:shadow-md">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xl">@statusIcon</span>
+                            <span class="font-bold">@log.NewStatus</span>
+                        </div>
+                        <span class="text-sm text-gray-500">@log.ChangedAt.ToString("dd.MM.yyyy HH:mm")</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-1">
+                        Изменил: <span class="font-semibold">@log.ChangedBy</span>
+                    </p>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p class="text-gray-600">История изменений отсутствует.</p>
+}

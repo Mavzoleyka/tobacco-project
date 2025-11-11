@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="CigaretteDomain\CigarettePhoto\Querys\Object\" />
+    <Folder Include="ReservationDomain\Services\" />
     <Folder Include="UserDomain\Querys\Object\" />
   </ItemGroup>
 

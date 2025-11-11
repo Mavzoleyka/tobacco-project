@@ -12,5 +12,6 @@ namespace Domain.UserDomain.Commands.Object
         public DateTime PickupDateTime { get; set; }
         public string? Comment { get; set; }
         public List<CreateReservationItemDTO> Items { get; set; } = new();
+        public decimal? TotalPrice { get; set; }
     }
 }

@@ -31,6 +31,7 @@ namespace Data.CigaretteRepositories
                  product.Description = entity.Description;
                  product.Stock = entity.Stock;
                  product.Brand = entity.Brand;
+                 product.Price = entity.Price;
                  product.CategodyId = entity.CategoryId;
                  product.ManufacturerId = entity.ManufacturerId;
                  foreach (var item in DTOlist)
@@ -78,6 +79,7 @@ namespace Data.CigaretteRepositories
                 Description = row.Description,
                 Name = row.Name,
                 Stock = row.Stock,
+                Price = row.Price,
                 CategoryId = row.CategodyId,
                 ManufacturerId = row.ManufacturerId,
                 CigarettesPhotos = row.CigarettesPhotos
@@ -124,6 +126,7 @@ namespace Data.CigaretteRepositories
             product.Description = obj.Description;
             product.Stock = obj.Stock;
             product.Brand = obj.Brand;
+            product.Price = obj.Price;
             product.CategodyId = obj.CategoryId;
             product.ManufacturerId = obj.ManufacturerId;
 
@@ -144,6 +147,7 @@ namespace Data.CigaretteRepositories
                 Description = row.Description,
                 Name = row.Name,
                 Stock = row.Stock,
+                Price = row.Price,
                 CategoryId = row.CategodyId,
                 ManufacturerId = row.ManufacturerId,
                 CategoryName = row.Categorie.Name,

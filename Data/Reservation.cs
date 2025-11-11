@@ -1,4 +1,5 @@
 ﻿using Data.CigaretteTables;
+using Data.LogTables;
 using Domain.UserDomain.Commands.Object;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -31,6 +32,8 @@ namespace Data
         public Client Client { get; set; } = null!;
 
         public List<ReservationItem> Items { get; set; } = new();
+
+        public ICollection<ReservationStatusLog> StatusLogs { get; set; } = new List<ReservationStatusLog>();
 
         public bool IsDelete { get ; set; }
     }

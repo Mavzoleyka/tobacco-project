@@ -17,6 +17,7 @@ namespace Domain.UserDomain.Commands.Object
         public decimal? TotalPrice { get; set; }
         public int ClientId { get; set; }
         public List<ReservationItemDTO> Items { get; set; } = new();
+        public List<ReservationStatusLogDTO> Logs { get; set; } = new();
         public bool IsDelete { get; set; }
     }
 }

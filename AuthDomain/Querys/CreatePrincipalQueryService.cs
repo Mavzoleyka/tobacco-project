@@ -13,7 +13,11 @@ namespace AuthDomain.Querys
     {
         public ClaimsPrincipal Execute(User obj)
         {
-            List<Claim> claims = new List<Claim>();
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, obj.Login),            
+                new Claim("ClientId", obj.Id.ToString())
+            };
             foreach (var name in obj.Rules)
             {
                 claims.Add(new Claim("role", name));

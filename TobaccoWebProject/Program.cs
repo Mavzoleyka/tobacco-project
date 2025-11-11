@@ -19,6 +19,8 @@ using Domain.CigaretteDomain.CigaretteProduct.Commands;
 using Domain.CigaretteDomain.CigaretteProduct.Commands.Object;
 using Domain.CigaretteDomain.CigaretteProduct.Querys;
 using Domain.CigaretteDomain.CigaretteProduct.Querys.Object;
+using Domain.ReservationDomain.Handlers;
+using Domain.ReservationDomain.Notifications;
 using Domain.UserDomain.Commands.Reservations;
 using Domain.UserDomain.Services;
 using MediatR;
@@ -66,8 +68,13 @@ namespace TobaccoWebProject
                                                    .WithScopedLifetime()
                                                     );
 
+            builder.Services.AddScoped<CartService>();
+            
+            
+
             builder.Services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(typeof(CreateReservationCommand).Assembly));
+            
 
 
             builder.Services.AddHttpContextAccessor();
@@ -93,7 +100,6 @@ namespace TobaccoWebProject
                     policy.RequireClaim("role", "Admin");
                 });
             });
-
 
             var app = builder.Build();
 
