@@ -12,6 +12,7 @@ namespace Domain.ReservationDomain.Notifications.Object
         public string Message { get; set; } = string.Empty;
         public bool IsRead { get; set; }
         public DateTime CreatedAt { get; set; }
+        public int ClientId { get; set; }
         public int? ReservationId { get; set; }
     }
 }

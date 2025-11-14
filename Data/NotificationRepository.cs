@@ -11,54 +11,92 @@ namespace Data
 {
     public class NotificationRepository : INotificationRepository
     {
-        private readonly Connection _db;
+        private readonly Connection _connection;
 
-        public NotificationRepository(Connection db)
+        public NotificationRepository(Connection connection)
         {
-            _db = db;
+            _connection = connection;
         }
 
-        public async Task<List<NotificationDTO>> GetByClientIdAsync(int clientId)
-        {
-            return await _db.Notifications
-                .Where(n => n.ClientId == clientId && !n.IsDelete)
-                .Select(n => new NotificationDTO
-                {
-                    Id = n.Id,
-                    Message = n.Message,
-                    IsRead = n.IsRead,
-                    CreatedAt = n.CreatedAt,
-                    ReservationId = n.ReservationId
-                })
-                .ToListAsync();
-        }
-
-        public async Task AddAsync(NotificationDTO dto)
+        
+        public async Task AddAsync(NotificationDTO dto, CancellationToken ct = default)
         {
             var entity = new Notification
             {
                 Message = dto.Message,
                 IsRead = dto.IsRead,
                 CreatedAt = dto.CreatedAt,
-                ClientId = dto.ReservationId.HasValue ? _db.Reservations
-                    .Where(r => r.Id == dto.ReservationId)
-                    .Select(r => r.ClientId)
-                    .FirstOrDefault() : 0,
-                ReservationId = dto.ReservationId
+                ClientId = dto.ClientId,
+                ReservationId = dto.ReservationId,
+                IsDelete = false
             };
 
-            _db.Notifications.Add(entity);
-            await _db.SaveChangesAsync();
+            await _connection.Notifications.AddAsync(entity, ct);
+            await _connection.SaveChangesAsync(ct);
+
+            dto.Id = entity.Id; 
         }
 
-        public async Task MarkAsReadAsync(int id)
+        public async Task<List<NotificationDTO>> GetByClientIdAsync(
+            int clientId,
+            bool includeRead = true,
+            CancellationToken ct = default)
         {
-            var entity = await _db.Notifications.FindAsync(id);
-            if (entity != null)
-            {
-                entity.IsRead = true;
-                await _db.SaveChangesAsync();
-            }
+            var query = _connection.Notifications
+                .AsNoTracking()
+                .Where(n => n.ClientId == clientId && !n.IsDelete);
+
+            if (!includeRead)
+                query = query.Where(n => !n.IsRead);
+
+            return await query
+                .OrderByDescending(n => n.CreatedAt)
+                .Select(n => new NotificationDTO
+                {
+                    Id = n.Id,
+                    Message = n.Message,
+                    IsRead = n.IsRead,
+                    CreatedAt = n.CreatedAt,
+                    ClientId = n.ClientId,
+                    ReservationId = n.ReservationId
+                })
+                .ToListAsync(ct);
+        }
+
+        public async Task<int> GetUnreadCountAsync(int clientId, CancellationToken ct = default)
+        {
+            return await _connection.Notifications
+                .Where(n => n.ClientId == clientId && !n.IsRead && !n.IsDelete)
+                .CountAsync(ct);
+        }
+
+        public async Task MarkAsReadAsync(int notificationId, int clientId, CancellationToken ct = default)
+        {
+            var notification = await _connection.Notifications
+                .FirstOrDefaultAsync(n =>
+                    n.Id == notificationId &&
+                    n.ClientId == clientId &&
+                    !n.IsDelete,
+                    ct);
+
+            if (notification == null) return;
+
+            notification.IsRead = true;
+            await _connection.SaveChangesAsync(ct);
+        }
+
+        public async Task MarkAllAsReadAsync(int clientId, CancellationToken ct = default)
+        {
+            var notifications = await _connection.Notifications
+                .Where(n => n.ClientId == clientId && !n.IsRead && !n.IsDelete)
+                .ToListAsync(ct);
+
+            if (!notifications.Any()) return;
+
+            foreach (var n in notifications)
+                n.IsRead = true;
+
+            await _connection.SaveChangesAsync(ct);
         }
     }
 }
