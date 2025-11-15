@@ -29,6 +29,16 @@
                             Перейти к брони №@note.ReservationId
                         </a>
                     }
+                    @if (!note.IsRead)
+                    {
+                        <form method="post" asp-page-handler="MarkAsRead" class="mt-1">
+                            <input type="hidden" name="NotificationId" value="@note.Id" />
+                            <button type="submit"
+                                    class="text-sm text-blue-600 hover:underline">
+                                Отметить как прочитанное
+                            </button>
+                        </form>
+                    }
                 </div>
             }
         </div>

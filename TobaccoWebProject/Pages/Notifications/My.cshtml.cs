@@ -1,3 +1,4 @@
+using Domain.ReservationDomain.Commands;
 using Domain.ReservationDomain.Notifications.Object;
 using Domain.ReservationDomain.Queries;
 using MediatR;
@@ -30,6 +31,20 @@ namespace TobaccoWebProject.Pages.Notifications
             Notifications = await _mediator.Send(new GetNotificationsByClientQuery { ClientId = clientId });
 
             return Page();
+        }
+        public async Task<IActionResult> OnPostMarkAsReadAsync(int NotificationId)
+        {
+            var clientIdClaim = User.FindFirst("ClientId");
+            if (clientIdClaim == null)
+                return RedirectToPage("/Account/Login");
+
+            int clientId = int.Parse(clientIdClaim.Value);
+
+            await _mediator.Send(
+            new MarkNotificationAsReadCommand(NotificationId, clientId)
+);
+
+            return RedirectToPage(); 
         }
     }
 }
