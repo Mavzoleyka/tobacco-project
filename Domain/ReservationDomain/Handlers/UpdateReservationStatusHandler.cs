@@ -52,6 +52,7 @@ namespace Domain.ReservationDomain.Handlers
                     Message = message,
                     CreatedAt = DateTime.UtcNow,
                     IsRead = false,
+                    ClientId = reservation.ClientId,
                     ReservationId = reservation.Id
                 };
 

@@ -1,0 +1,18 @@
+﻿@model int
+
+@if (Model > 0)
+{
+    <a href="/Notifications/My" class="relative">
+        <i class="fa fa-bell text-2xl"></i>
+        <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold
+                         rounded-full px-1.5 py-0.5">
+            @Model
+        </span>
+    </a>
+}
+else
+{
+    <a href="/Notifications/My">
+        <i class="fa fa-bell text-2xl text-gray-500"></i>
+    </a>
+}

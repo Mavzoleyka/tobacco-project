@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿
+
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8" />
@@ -53,9 +55,10 @@
                         Войти
                     </a>
                 }
-                <a asp-page="/Notifications/My"
-                   class="relative text-gray-800 hover:text-blue-700 transition">
-                    🔔 Уведомления
+                <a asp-page="/Notifications/My" class="relative">
+                    <span class="text-2xl">🔔</span>
+
+                    @await Component.InvokeAsync("NotificationBadge")
                 </a>
 
                 <!--  корзина -->

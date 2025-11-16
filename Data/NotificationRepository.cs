@@ -44,7 +44,7 @@ namespace Data
         {
             var query = _connection.Notifications
                 .AsNoTracking()
-                .Where(n => n.ClientId == clientId && !n.IsDelete);
+                .Where(n => n.ClientId == clientId);
 
             if (!includeRead)
                 query = query.Where(n => !n.IsRead);
@@ -66,7 +66,7 @@ namespace Data
         public async Task<int> GetUnreadCountAsync(int clientId, CancellationToken ct = default)
         {
             return await _connection.Notifications
-                .Where(n => n.ClientId == clientId && !n.IsRead && !n.IsDelete)
+                .Where(n => n.ClientId == clientId && !n.IsRead)
                 .CountAsync(ct);
         }
 
@@ -75,8 +75,7 @@ namespace Data
             var notification = await _connection.Notifications
                 .FirstOrDefaultAsync(n =>
                     n.Id == notificationId &&
-                    n.ClientId == clientId &&
-                    !n.IsDelete,
+                    n.ClientId == clientId,
                     ct);
 
             if (notification == null) return;
@@ -88,7 +87,7 @@ namespace Data
         public async Task MarkAllAsReadAsync(int clientId, CancellationToken ct = default)
         {
             var notifications = await _connection.Notifications
-                .Where(n => n.ClientId == clientId && !n.IsRead && !n.IsDelete)
+                .Where(n => n.ClientId == clientId && !n.IsRead)
                 .ToListAsync(ct);
 
             if (!notifications.Any()) return;
