@@ -44,7 +44,19 @@ namespace TobaccoWebProject.Pages.Notifications
             new MarkNotificationAsReadCommand(NotificationId, clientId)
 );
 
-            return RedirectToPage(); 
+            return RedirectToPage();
+        }
+        public async Task<IActionResult> OnPostMarkAllAsync()
+        {
+            var clientIdClaim = User.FindFirst("ClientId");
+            if (clientIdClaim == null)
+                return RedirectToPage("/Account/Login");
+
+            int clientId = int.Parse(clientIdClaim.Value);
+
+            await _mediator.Send(new MarkAllNotificationsAsReadCommand(clientId));
+
+            return RedirectToPage();
         }
     }
 }
