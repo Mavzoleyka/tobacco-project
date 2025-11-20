@@ -16,6 +16,7 @@ namespace Domain.UserDomain.Commands.Object
         public ReservationStatus ReservationStatus { get; set; }
         public decimal? TotalPrice { get; set; }
         public int ClientId { get; set; }
+        public string? ClientEmail { get; set; }
         public List<ReservationItemDTO> Items { get; set; } = new();
         public List<ReservationStatusLogDTO> Logs { get; set; } = new();
         public bool IsDelete { get; set; }

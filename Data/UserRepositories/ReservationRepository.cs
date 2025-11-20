@@ -91,7 +91,8 @@ namespace Data.UserRepositories
         public async Task<ReservationDTO> GetReservationByIdAsync(int id)
         {
             var reservation = await _connection.Reservations
-        .Include(r => r.Items)
+            .Include(r => r.Client)
+            .Include(r => r.Items)
             .ThenInclude(i => i.Product)
         .Include(r => r.StatusLogs) 
         .FirstOrDefaultAsync(r => r.Id == id);
@@ -106,6 +107,7 @@ namespace Data.UserRepositories
                 ReservationStatus = reservation.Status,
                 TotalPrice = reservation.TotalPrice,
                 ClientId = reservation.ClientId,
+                ClientEmail = reservation.Client.Email,
                 IsDelete = reservation.IsDelete,
 
                 Items = reservation.Items.Select(i => new ReservationItemDTO
@@ -136,6 +138,7 @@ namespace Data.UserRepositories
     ReservationStatus? status, DateTime? startDate, DateTime? endDate)
         {
             var query = _connection.Reservations
+                .Include(r => r.Client)
                 .Include(r => r.Items)
                 .ThenInclude(i => i.Product)
                 .AsQueryable();
@@ -172,7 +175,8 @@ namespace Data.UserRepositories
         public async Task<List<ReservationDTO>> GetReservationsByClientIdAsync(int clientId)
         {
              return await _connection.Reservations
-            .Include(r => r.Items)
+                .Include(r => r.Client)
+                .Include(r => r.Items)
                 .ThenInclude(i => i.Product)
             .Where(r => r.ClientId == clientId)
             .Select(r => new ReservationDTO
@@ -216,6 +220,7 @@ namespace Data.UserRepositories
         public async Task<List<ReservationDTO>> GetReservationsByStatusAsync(ReservationStatus? status)
         {
             return await _connection.Reservations
+                        .Include(r => r.Client)
                         .Include(r => r.Items).ThenInclude(i => i.Product)
                         .Where(r => !status.HasValue || r.Status == status.Value)
                         .OrderByDescending(r => r.PickupDateTime)

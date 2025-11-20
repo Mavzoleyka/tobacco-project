@@ -3,6 +3,7 @@ using AuthDomain.Querys;
 using AuthDomain.Querys.Object;
 using Data;
 using Data.CigaretteRepositories;
+using Data.Notifications;
 using Domain.CigaretteDomain.CigaretteCategorie;
 using Domain.CigaretteDomain.CigaretteCategorie.Commands;
 using Domain.CigaretteDomain.CigaretteCategorie.Commands.Object;
@@ -25,9 +26,12 @@ using Domain.UserDomain.Commands.Reservations;
 using Domain.UserDomain.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Service;
 using System.Reflection;
 using System.Security.Claims;
+using Serilog;
+using Serilog.Events;
 
 namespace TobaccoWebProject
 {
@@ -36,6 +40,15 @@ namespace TobaccoWebProject
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            Log.Logger = new LoggerConfiguration()
+             .ReadFrom.Configuration(builder.Configuration)
+             .CreateLogger();
+
+            builder.Host.UseSerilog();
+
+
+
             builder.Services.AddRazorPages(options =>
             {
                 options.Conventions.AuthorizeFolder("/Admin", "AdminPolicy");
@@ -80,6 +93,7 @@ namespace TobaccoWebProject
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddSession();
             builder.Services.AddScoped<CartService>();
+            builder.Services.AddScoped<IEmailNotificationService, EmailNotificationService>();
 
             builder.Services.AddAuthentication("Cookies")
                             .AddCookie("Cookies", option =>

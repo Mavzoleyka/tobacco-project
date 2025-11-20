@@ -16,13 +16,16 @@ namespace Domain.ReservationDomain.Handlers
     {
         private readonly IReservationRepository _reservationRepository;
         private readonly INotificationRepository _notificationRepository;
+        private readonly IEmailNotificationService _emailService;
 
         public UpdateReservationStatusHandler(
             IReservationRepository reservationRepository,
-            INotificationRepository notificationRepository)
+            INotificationRepository notificationRepository,
+            IEmailNotificationService emailService)
         {
             _reservationRepository = reservationRepository;
             _notificationRepository = notificationRepository;
+            _emailService = emailService;
         }
 
         public async Task<Unit> Handle(UpdateReservationStatusCommand request, CancellationToken cancellationToken)
@@ -43,7 +46,7 @@ namespace Domain.ReservationDomain.Handlers
                 request.NewStatus,
                 request.ChangedBy);
 
-            
+
             try
             {
                 var message = $"Статус вашей брони №{reservation.Id} изменён на {request.NewStatus}";
@@ -61,6 +64,22 @@ namespace Domain.ReservationDomain.Handlers
             catch (Exception ex)
             {
                 Console.WriteLine($"Не удалось сохранить уведомление: {ex.Message}");
+            }
+
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(reservation.ClientEmail))
+                {
+                    await _emailService.SendReservationStatusChangedEmailAsync(
+                        reservation.ClientEmail,
+                        reservation.Id,
+                        request.NewStatus,
+                        cancellationToken);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[WARN] Не удалось отправить email-уведомление: {ex.Message}");
             }
 
             return Unit.Value;

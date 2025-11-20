@@ -18,6 +18,7 @@ namespace Data
 
         [MaxLength(20)]
         public string Password { get; set; } = null!;
+        public string Email { get; set; } = null!;
 
         public ICollection<Role> Roles { get; set; } = null!;
     }
